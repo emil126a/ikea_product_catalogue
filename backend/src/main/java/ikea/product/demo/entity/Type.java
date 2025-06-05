@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "product_types")
-public class ProductType {
+public class Type {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,5 +20,13 @@ public class ProductType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

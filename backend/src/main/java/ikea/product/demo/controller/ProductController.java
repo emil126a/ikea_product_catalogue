@@ -1,16 +1,18 @@
 package ikea.product.demo.controller;
 
 import ikea.product.demo.dto.input.ProductDTO;
-
 import ikea.product.demo.entity.Product;
+import ikea.product.demo.exception.ProductNotFoundException;
 import ikea.product.demo.repository.ProductRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Product Management", description = "APIs for managing products")
 public class ProductController {
 
     private ProductRepository productRepository;
@@ -20,8 +22,9 @@ public class ProductController {
     }
 
     @GetMapping("/products")
+    @Operation(summary = "Fetches all products", description = "It fetches all products by name type and color.")
     public List<Product> getProducts() {
-        List<Product> products =productRepository.findAll();
+        List<Product> products = productRepository.findAll();
         return products;
     }
 
@@ -30,10 +33,13 @@ public class ProductController {
         return List.of();
     }
 
-
     @GetMapping("/products/{id}")
     public Product findProduct(@PathVariable int id) {
-        Product product = new Product();
+        Product product = productRepository.findById(id);
+
+        if (product == null) {
+            throw new ProductNotFoundException("Product not found: " + id);
+        }
 
         return product;
     }

@@ -1,16 +1,12 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.ManyToAny;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "products")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -32,8 +28,11 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "colour_id")
     )
-
     private List<Colour> colours;
+
+    @ManyToOne
+    @JoinColumn(name = "product_type_id", nullable = false)
+    private Type productType;
 
     public String getName() {
         return name;
@@ -58,5 +57,13 @@ public class Product {
 
     public List<Colour> getColours() {
         return colours;
+    }
+
+    public Type getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Type productType) {
+        this.productType = productType;
     }
 }
