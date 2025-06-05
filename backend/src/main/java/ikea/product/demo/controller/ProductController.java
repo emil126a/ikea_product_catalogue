@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product findProduct(@PathVariable int id) {
+    public Product findProduct(@PathVariable Long id) {
         Product product = productRepository.findById(id);
 
         if (product == null) {
