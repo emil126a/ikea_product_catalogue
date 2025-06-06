@@ -1,6 +1,7 @@
 package ikea.product.demo.controller.api;
 
 import ikea.product.demo.dto.input.ProductDTO;
+import ikea.product.demo.dto.output.ApiResponseDTO;
 import ikea.product.demo.dto.output.PaginatedResponseDTO;
 import ikea.product.demo.dto.output.ProductListResponseDTO;
 import ikea.product.demo.entity.Product;
@@ -57,7 +58,7 @@ public class ProductController {
                     schema = @Schema(implementation = ProductListResponseDTO.class)
             )
     )
-    public ResponseEntity<ProductListResponseDTO<Product>> listProducts(
+    public ResponseEntity<ApiResponseDTO<ProductListResponseDTO<Product>>> listProducts(
             @Parameter(
                     description = "Pagination and sorting parameters",
                     example = "{\"page\":0,\"size\":10,\"sort\":\"createdAt,desc\"}",
@@ -78,10 +79,18 @@ public class ProductController {
                 products.isEmpty()
         );
 
-        ProductListResponseDTO<Product> response = new ProductListResponseDTO<>(true, products.getContent(), pagination);
-        return ResponseEntity.ok(response);
+        ProductListResponseDTO<Product> response = new ProductListResponseDTO<>(products.getContent(), pagination);
+        ApiResponseDTO<ProductListResponseDTO<Product>> apiResponse = new ApiResponseDTO<>(true, response);
+
+        return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Creates a new product with the given data.
+     *
+     * @param productDTO the product data from the request body
+     * @return the created Product entity
+     */
     @PostMapping("/products")
     @Operation(summary = "Create a new product", description = "Creates a new product with the provided details.")
     @ApiResponses(value = {
@@ -95,6 +104,13 @@ public class ProductController {
         return product;
     }
 
+    /**
+     * Returns a product by its ID.
+     *
+     * @param id the ID of the product
+     * @return a ResponseEntity with ApiResponseDTO containing the product if found,
+     * or 404 error if not found
+     */
     @GetMapping("/products/{id}")
     @Operation(
             summary = "Get product by ID",
@@ -120,7 +136,7 @@ public class ProductController {
                     )
             )
     })
-    public ResponseEntity<Product> getProductById(
+    public ResponseEntity<ApiResponseDTO<Product>> getProductById(
             @Parameter(
                     name = "id",
                     description = "ID of the product to retrieve",
@@ -134,6 +150,8 @@ public class ProductController {
                 .orElseThrow(
                         () -> new ProductNotFoundException("Product not found id: " + id)
                 );
-        return ResponseEntity.ok(product);
+        ApiResponseDTO<Product> apiResponse = new ApiResponseDTO<>(true, product);
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

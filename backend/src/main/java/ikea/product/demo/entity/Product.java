@@ -1,10 +1,12 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 @Entity
@@ -17,9 +19,6 @@ public class Product {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
@@ -39,6 +38,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "product_type_id", nullable = false)
     private ProductType productType;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     public void addColour(Colour colour) {
         if (colours == null) {

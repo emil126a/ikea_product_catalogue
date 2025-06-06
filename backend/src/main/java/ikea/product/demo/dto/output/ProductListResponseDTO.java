@@ -13,11 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @Schema(description = "Paginated response containing a list of products")
 public class ProductListResponseDTO<T> {
-    @Schema(description = "Shows operation success")
-    private Boolean success;
 
     @Schema(description = "List of items in the current page")
-    private List<Product> message;
+    private List<Product> products;
 
     @Schema(description = "Pagination information")
     private PaginatedResponseDTO pagination;
