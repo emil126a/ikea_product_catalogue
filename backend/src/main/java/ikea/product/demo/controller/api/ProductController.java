@@ -9,6 +9,7 @@ import ikea.product.demo.repository.ProductRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -47,11 +49,14 @@ public class ProductController {
             summary = "List all products",
             description = "Retrieves a paginated list of all products."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved products",
-                    content = @Content(schema = @Schema(implementation = ProductListResponseDTO.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved products",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductListResponseDTO.class)
+            )
+    )
     public ResponseEntity<ProductListResponseDTO<Product>> listProducts(
             @Parameter(
                     description = "Pagination and sorting parameters",
@@ -91,10 +96,44 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product getProductById(@PathVariable Integer id) {
-        return productRepository.findById(id)
+    @Operation(
+            summary = "Get product by ID",
+            description = "Retrieves a specific product by its unique identifier"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product found and returned",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product not found",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"success\": false, \"message\": \"Product not found id: 123\"}"
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<Product> getProductById(
+            @Parameter(
+                    name = "id",
+                    description = "ID of the product to retrieve",
+                    example = "123",
+                    required = true,
+                    schema = @Schema(type = "integer", format = "int32")
+            )
+            @PathVariable Integer id
+    ) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(
                         () -> new ProductNotFoundException("Product not found id: " + id)
                 );
+        return ResponseEntity.ok(product);
     }
 }

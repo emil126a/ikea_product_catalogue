@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -26,6 +25,6 @@ public class ProductDTO {
     private List<Integer> colourIds;
 
     @NotBlank(message = "Name is required")
-    @Schema(description = "The name of the product", example = "POÄNG")
+    @Schema(description = "The name of the product", example = "LANDSKRONA")
     private String name;
 }
