@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -32,20 +31,17 @@ public class ProductController {
 
     @GetMapping("/products")
     @Operation(summary = "Fetches all products", description = "It fetches all products by name type and color.")
-    public Page<Product> getProducts(
+    public Page<Product> listProducts(
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
             @PageableDefault(size = 10) final Pageable pageable
     ) {
-        Page<Product> products = productRepository.findAll(pageable);
-        return products;
+        return productRepository.findAll(pageable);
     }
 
-
     @PostMapping("/products")
-    public Product createProduct(@Valid @RequestBody ProductDTO productDTO) {
-
+    public Product getProductById(@Valid @RequestBody ProductDTO productDTO) {
         Product product = new Product();
-        product.setName("lwekl");
+        product.setName(productDTO.getName());
         return product;
     }
 
@@ -53,19 +49,7 @@ public class ProductController {
     public Product findProduct(@PathVariable Integer id) {
         return productRepository.findById(id)
                 .orElseThrow(
-                        () -> new ProductNotFoundException("Product not found: " + id)
+                        () -> new ProductNotFoundException("Product not found id: " + id)
                 );
-    }
-
-    @PatchMapping("/products/{id}")
-    public Product updateProduct(@PathVariable int id) {
-        Product product = new Product();
-
-        return product;
-    }
-
-    @DeleteMapping("/products/{id}")
-    public String deleteEmployee() {
-        return "";
     }
 }

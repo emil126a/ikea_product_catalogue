@@ -1,16 +1,20 @@
 package ikea.product.demo.exception;
 
+import ikea.product.demo.dto.ErrorResponseDTO;
 import io.swagger.v3.oas.annotations.Hidden;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 @Hidden
 @RestControllerAdvice
 public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler
     public ResponseEntity<ProductErrorResponse> handleException(ProductNotFoundException exception) {
         ProductErrorResponse error = new ProductErrorResponse();
@@ -20,5 +24,22 @@ public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
 
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO();
+        errorResponse.setSuccess(false);
+        errorResponse.setErrors(errors);
+
+        return new ResponseEntity<>(errorResponse, headers, status);
+    }
 }

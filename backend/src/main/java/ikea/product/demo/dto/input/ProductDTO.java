@@ -1,18 +1,15 @@
 package ikea.product.demo.dto.input;
 
-import ikea.product.demo.entity.Colour;
-import ikea.product.demo.entity.Type;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class ProductDTO {
     @NotBlank(message = "Product type is required")
     private String productType;
 
-    @NotBlank
+    @NotBlank(message = "Colour is required")
     private String colour;
 
-    @NotBlank
+    @NotBlank(message = "Name is required")
     private String name;
 
     public String getProductType() {
@@ -39,4 +36,3 @@ public class ProductDTO {
         this.name = name;
     }
 }
-
