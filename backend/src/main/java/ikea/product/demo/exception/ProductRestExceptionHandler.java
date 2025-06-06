@@ -19,7 +19,7 @@ public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler
     public ResponseEntity<ProductErrorResponse> handleException(ProductNotFoundException exception) {
         ProductErrorResponse error = new ProductErrorResponse();
-        error.setStatus(false);
+        error.setSuccess(false);
         error.setMessage(exception.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
