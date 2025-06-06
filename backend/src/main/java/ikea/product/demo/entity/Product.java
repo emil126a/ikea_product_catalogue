@@ -1,11 +1,12 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
-
+import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "products")
 public class Product {
@@ -39,36 +40,11 @@ public class Product {
     @JoinColumn(name = "product_type_id", nullable = false)
     private Type productType;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void addColour(Colour colour) {
-
         if (colours == null) {
             colours = new ArrayList<>();
         }
 
         colours.add(colour);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public List<Colour> getColours() {
-        return colours;
-    }
-
-    public Type getProductType() {
-        return productType;
-    }
-
-    public void setProductType(Type productType) {
-        this.productType = productType;
     }
 }

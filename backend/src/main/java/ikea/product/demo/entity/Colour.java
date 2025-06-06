@@ -1,15 +1,11 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.Type;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "colours")
-
 public class Colour {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,9 +34,7 @@ public class Colour {
         this.name = name;
     }
 
-
     public void addProduct(Product product) {
-
         if (products == null) {
             products = new ArrayList<>();
         }

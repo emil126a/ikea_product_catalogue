@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ProductErrorResponse {
-    private int status;
+    private boolean status;
     private String message;
 }
