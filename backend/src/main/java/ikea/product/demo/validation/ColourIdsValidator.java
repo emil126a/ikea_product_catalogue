@@ -2,7 +2,6 @@ package ikea.product.demo.validation;
 
 
 import ikea.product.demo.repository.ColourRepository;
-import ikea.product.demo.repository.ProductTypeRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ValidColourIdsValidator implements ConstraintValidator<ValidColourIds, List<Integer>> {
+public class ColourIdsValidator implements ConstraintValidator<ValidColourIds, List<Integer>> {
     private final ColourRepository colourRepository;
 
     @Autowired
-    public ValidColourIdsValidator(ColourRepository productTypeRepository) {
+    public ColourIdsValidator(ColourRepository productTypeRepository) {
         this.colourRepository = productTypeRepository;
     }
 

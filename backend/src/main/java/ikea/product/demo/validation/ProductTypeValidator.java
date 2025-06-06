@@ -6,7 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class ProductTypeValidator implements ConstraintValidator<ValidProductType, Integer> {
 
@@ -19,7 +18,6 @@ public class ProductTypeValidator implements ConstraintValidator<ValidProductTyp
 
     @Override
     public boolean isValid(Integer productTypeId, ConstraintValidatorContext context) {
-
-        return productTypeRepository.findById(productTypeId).isPresent();
+        return productTypeRepository.existsById(productTypeId);
     }
 }
