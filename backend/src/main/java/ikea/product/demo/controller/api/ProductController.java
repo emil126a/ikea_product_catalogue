@@ -7,6 +7,7 @@ import ikea.product.demo.entity.Product;
 import ikea.product.demo.exception.ProductNotFoundException;
 import ikea.product.demo.repository.ProductRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 
-
 /**
  * REST controller for managing products.
  * Provides endpoints for listing, retrieving, and creating products.
@@ -30,7 +30,6 @@ import org.springframework.data.web.SortDefault;
 @RequestMapping("/api")
 @Tag(name = "Product Management", description = "Endpoints for managing product inventory")
 public class ProductController {
-
     private final ProductRepository productRepository;
 
     public ProductController(ProductRepository productRepository) {
@@ -54,6 +53,11 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<ProductListResponseDTO<Product>> listProducts(
+            @Parameter(
+                    description = "Pagination and sorting parameters",
+                    example = "{\"page\":0,\"size\":10,\"sort\":\"createdAt,desc\"}",
+                    schema = @Schema(implementation = Pageable.class)
+            )
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
             @PageableDefault(size = 10) final Pageable pageable
     ) {
