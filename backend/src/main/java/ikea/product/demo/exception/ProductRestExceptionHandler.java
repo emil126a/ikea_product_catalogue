@@ -1,6 +1,6 @@
 package ikea.product.demo.exception;
 
-import ikea.product.demo.dto.output.ValidationErrorResponseDTO;
+import ikea.product.demo.dto.error.ValidationErrorResponseDTO;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;

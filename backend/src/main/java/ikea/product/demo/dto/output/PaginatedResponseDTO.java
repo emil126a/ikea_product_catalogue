@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 @Data
 @AllArgsConstructor
-@Schema(description = "PaginationDTO information")
-public class PaginationDTO {
-    @Schema(description = "PaginationDTO information")
+@Schema(description = "PaginatedResponseDTO information")
+public class PaginatedResponseDTO {
+    @Schema(description = "PaginatedResponseDTO information")
     private Pageable pageable;
 
     @Schema(description = "Total number of elements across all pages", example = "2")

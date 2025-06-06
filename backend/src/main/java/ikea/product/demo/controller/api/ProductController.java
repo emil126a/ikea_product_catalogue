@@ -1,7 +1,7 @@
-package ikea.product.demo.controller;
+package ikea.product.demo.controller.api;
 
 import ikea.product.demo.dto.input.ProductDTO;
-import ikea.product.demo.dto.output.PaginationDTO;
+import ikea.product.demo.dto.output.PaginatedResponseDTO;
 import ikea.product.demo.dto.output.ProductListResponseDTO;
 import ikea.product.demo.entity.Product;
 import ikea.product.demo.exception.ProductNotFoundException;
@@ -40,7 +40,7 @@ public class ProductController {
     /**
      * Retrieves a paginated list of products sorted by creation date.
      *
-     * @param pageable PaginationDTO and sorting parameters (default: 10 items, sorted by createdAt DESC)
+     * @param pageable PaginatedResponseDTO and sorting parameters (default: 10 items, sorted by createdAt DESC)
      * @return A paginated response containing product details
      */
     @GetMapping("/products")
@@ -59,7 +59,7 @@ public class ProductController {
     ) {
         Page<Product> products = productRepository.findAll(pageable);
 
-        PaginationDTO pagination = new PaginationDTO(
+        PaginatedResponseDTO pagination = new PaginatedResponseDTO(
                 products.getPageable(),
                 products.getTotalElements(),
                 products.getTotalPages(),
