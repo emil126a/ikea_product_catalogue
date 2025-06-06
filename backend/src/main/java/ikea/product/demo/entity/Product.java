@@ -38,7 +38,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "product_type_id", nullable = false)
-    private Type productType;
+    private ProductType productType;
 
     public void addColour(Colour colour) {
         if (colours == null) {

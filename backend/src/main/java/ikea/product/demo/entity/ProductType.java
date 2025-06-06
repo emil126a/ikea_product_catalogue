@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name = "product_types")
-public class Type {
+public class ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
