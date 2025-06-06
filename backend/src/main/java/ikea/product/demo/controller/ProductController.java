@@ -6,7 +6,16 @@ import ikea.product.demo.exception.ProductNotFoundException;
 import ikea.product.demo.repository.ProductRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import jakarta.validation.Valid;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
+
 
 import java.util.List;
 
@@ -15,7 +24,7 @@ import java.util.List;
 @Tag(name = "Product Management", description = "APIs for managing products")
 public class ProductController {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -23,25 +32,29 @@ public class ProductController {
 
     @GetMapping("/products")
     @Operation(summary = "Fetches all products", description = "It fetches all products by name type and color.")
-    public List<Product> getProducts() {
-        List<Product> products = productRepository.findAll();
+    public Page<Product> getProducts(
+            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 10) final Pageable pageable
+    ) {
+        Page<Product> products = productRepository.findAll(pageable);
         return products;
     }
 
+
     @PostMapping("/products")
-    public List<Product> createProduct(@RequestBody ProductDTO productDTO) {
-        return List.of();
+    public Product createProduct(@Valid @RequestBody ProductDTO productDTO) {
+
+        Product product = new Product();
+        product.setName("lwekl");
+        return product;
     }
 
     @GetMapping("/products/{id}")
-    public Product findProduct(@PathVariable Long id) {
-        Product product = productRepository.findById(id);
-
-        if (product == null) {
-            throw new ProductNotFoundException("Product not found: " + id);
-        }
-
-        return product;
+    public Product findProduct(@PathVariable Integer id) {
+        return productRepository.findById(id)
+                .orElseThrow(
+                        () -> new ProductNotFoundException("Product not found: " + id)
+                );
     }
 
     @PatchMapping("/products/{id}")

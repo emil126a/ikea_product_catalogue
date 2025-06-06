@@ -1,6 +1,8 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class Product {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
