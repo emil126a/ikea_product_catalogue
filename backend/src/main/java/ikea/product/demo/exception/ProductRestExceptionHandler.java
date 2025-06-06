@@ -1,6 +1,6 @@
 package ikea.product.demo.exception;
 
-import ikea.product.demo.dto.ErrorResponseDTO;
+import ikea.product.demo.dto.output.ValidationErrorResponseDTO;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +37,11 @@ public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler 
             errors.put(error.getField(), error.getDefaultMessage());
         }
 
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO();
-        errorResponse.setSuccess(false);
-        errorResponse.setErrors(errors);
+        ValidationErrorResponseDTO errorResponse = ValidationErrorResponseDTO
+                .builder()
+                .success(false)
+                .errors(errors)
+                .build();
 
         return new ResponseEntity<>(errorResponse, headers, status);
     }
