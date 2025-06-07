@@ -1,6 +1,9 @@
 package ikea.product.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,29 +13,17 @@ public class Colour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Setter
+    @Getter
     private int id;
 
+    @Setter
+    @Getter
     @Column(name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "colours")
-    private List<Product> products ;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private List<Product> products;
 
     public void addProduct(Product product) {
         if (products == null) {
