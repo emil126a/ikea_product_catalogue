@@ -4,10 +4,13 @@ import ikea.product.demo.dto.input.ProductDTO;
 import ikea.product.demo.dto.output.ApiResponseDTO;
 import ikea.product.demo.dto.output.PaginatedApiResponseDTO;
 import ikea.product.demo.dto.output.PaginationDTO;
-import ikea.product.demo.dto.output.ProductListResponseDTO;
+import ikea.product.demo.entity.Colour;
 import ikea.product.demo.entity.Product;
+import ikea.product.demo.entity.ProductType;
 import ikea.product.demo.exception.ProductNotFoundException;
+import ikea.product.demo.repository.ColourRepository;
 import ikea.product.demo.repository.ProductRepository;
+import ikea.product.demo.repository.ProductTypeRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -25,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -37,9 +41,16 @@ import java.util.List;
 @Tag(name = "Product Management", description = "Endpoints for managing product inventory")
 public class ProductController {
     private final ProductRepository productRepository;
+    private final ProductTypeRepository productTypeRepository;
+    private final ColourRepository colourRepository;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository,
+                             ProductTypeRepository productTypeRepository,
+                             ColourRepository colourRepository
+    ) {
         this.productRepository = productRepository;
+        this.productTypeRepository = productTypeRepository;
+        this.colourRepository = colourRepository;
     }
 
     /**
@@ -82,9 +93,9 @@ public class ProductController {
                 products.isEmpty()
         );
 
-        PaginatedApiResponseDTO<List<Product>> apiResponse = new PaginatedApiResponseDTO<>(true, products.getContent(),pagination);
+        PaginatedApiResponseDTO<List<Product>> paginatedApiResponseDTO = new PaginatedApiResponseDTO<>(true, products.getContent(), pagination);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(paginatedApiResponseDTO);
     }
 
     /**
@@ -100,10 +111,23 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public Product createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    @Transactional
+    public ResponseEntity<ApiResponseDTO<Product>> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductType productType = productTypeRepository.findOneById(productDTO.getProductTypeId());
+
         Product product = new Product();
         product.setName(productDTO.getName());
-        return product;
+        product.setProductType(productType);
+
+        for (int id : productDTO.getColourIds()) {
+            Colour colour = colourRepository.findOneById(id);
+            product.addColour(colour);
+        }
+
+        productRepository.save(product);
+
+        ApiResponseDTO<Product> apiResponseDTO = new ApiResponseDTO<>(true, product);
+        return ResponseEntity.ok(apiResponseDTO);
     }
 
     /**
@@ -133,7 +157,13 @@ public class ProductController {
                     content = @Content(
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
-                                    value = "{\"success\": false, \"message\": \"Product not found id: 123\"}"
+                                    value = "{\n" +
+                                            "  \"success\": false,\n" +
+                                            "  \"error\": {\n" +
+                                            "    \"message\": \"Product not found id: 123\",\n" +
+                                            "    \"code\": 404\n" +
+                                            "  }\n" +
+                                            "}"
                             )
                     )
             )
@@ -142,7 +172,7 @@ public class ProductController {
             @Parameter(
                     name = "id",
                     description = "ID of the product to retrieve",
-                    example = "123",
+                    example = "1",
                     required = true,
                     schema = @Schema(type = "integer", format = "int32")
             )
