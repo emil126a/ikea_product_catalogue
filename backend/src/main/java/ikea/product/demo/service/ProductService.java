@@ -39,7 +39,7 @@ public class ProductService {
 
     public ResponseEntity<Response<ProductResponse>> createProduct(ProductRequest request) {
         ProductType productType = productTypeRepository.findOneById(request.getProductTypeId());
-        Product product = productMapper.toRequest(request);
+        Product product = productMapper.toEntity(request);
         product.setProductType(productType);
         product.setCreatedAt(LocalDateTime.now());
 
