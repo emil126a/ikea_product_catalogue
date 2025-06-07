@@ -1,6 +1,6 @@
 package ikea.product.demo.exception;
 
-import ikea.product.demo.dto.error.ValidationErrorResponse;
+import ikea.product.demo.dto.response.ValidationErrorResponse;
 import io.micrometer.common.lang.NonNull;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpHeaders;

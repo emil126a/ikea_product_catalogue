@@ -1,4 +1,4 @@
-package ikea.product.demo.dto.error;
+package ikea.product.demo.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

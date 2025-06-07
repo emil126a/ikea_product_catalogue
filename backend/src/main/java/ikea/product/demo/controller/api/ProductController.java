@@ -1,6 +1,6 @@
 package ikea.product.demo.controller.api;
 
-import ikea.product.demo.dto.error.ValidationErrorResponse;
+import ikea.product.demo.dto.response.ValidationErrorResponse;
 import ikea.product.demo.dto.request.ProductRequest;
 import ikea.product.demo.dto.response.*;
 import ikea.product.demo.entity.Colour;
