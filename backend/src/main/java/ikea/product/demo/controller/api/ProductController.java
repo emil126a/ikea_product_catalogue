@@ -10,6 +10,7 @@ import ikea.product.demo.exception.ProductNotFoundException;
 import ikea.product.demo.repository.ColourRepository;
 import ikea.product.demo.repository.ProductRepository;
 import ikea.product.demo.repository.ProductTypeRepository;
+import ikea.product.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -41,19 +43,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Product Management", description = "Endpoints for managing product inventory")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductRepository productRepository;
     private final ProductTypeRepository productTypeRepository;
     private final ColourRepository colourRepository;
-
-    public ProductController(ProductRepository productRepository,
-                             ProductTypeRepository productTypeRepository,
-                             ColourRepository colourRepository
-    ) {
-        this.productRepository = productRepository;
-        this.productTypeRepository = productTypeRepository;
-        this.colourRepository = colourRepository;
-    }
+    private final ProductService productService;
 
     /**
      * Retrieves a paginated list of products sorted by creation date.
@@ -83,27 +78,7 @@ public class ProductController {
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
             @PageableDefault(size = 10) final Pageable pageable
     ) {
-        Page<Product> products = productRepository.findAll(pageable);
-
-        PaginationResponse pagination = new PaginationResponse(
-                products.getPageable(),
-                products.getTotalElements(),
-                products.getTotalPages(),
-                products.getNumberOfElements(),
-                products.isFirst(),
-                products.isLast(),
-                products.isEmpty()
-        );
-
-        List<ProductResponse> productResponseList = new ArrayList<>();
-
-        for (Product product : products.getContent()) {
-            productResponseList.add(buildProductResponse(product));
-        }
-
-        PaginatedResponse<List<ProductResponse>> paginatedResponse = new PaginatedResponse<>(true, productResponseList, pagination);
-
-        return ResponseEntity.ok(paginatedResponse);
+        return productService.listProducts(pageable);
     }
 
     @PostMapping("/products")
@@ -141,43 +116,9 @@ public class ProductController {
     })
     @Transactional
     public ResponseEntity<Response<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductType productType = productTypeRepository.findOneById(productRequest.getProductTypeId());
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setCreatedAt(LocalDateTime.now());
-        product.setProductType(productType);
-
-        for (int id : productRequest.getColourIds()) {
-            Colour colour = colourRepository.findOneById(id);
-            product.addColour(colour);
-        }
-        productRepository.save(product);
-
-        ProductResponse productResponse = buildProductResponse(product);
-        Response<ProductResponse> response = new Response<>(true, productResponse);
-        return ResponseEntity.ok(response);
+        return productService.createProduct(productRequest);
     }
 
-    private ProductResponse buildProductResponse(Product product) {
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setId(product.getId());
-        productResponse.setName(product.getName());
-        productResponse.setCreatedAt((product.getCreatedAt() != null) ? product.getCreatedAt().toString() : "");
-        productResponse.setProductType(
-                new ProductTypeResponse(
-                        product.getProductType().getId(),
-                        product.getProductType().getName()
-                )
-        );
-        productResponse.setColours(product.getColours().stream()
-                .map(colour -> new ColourResponse(
-                        colour.getId(),
-                        colour.getName())
-                )
-                .collect(Collectors.toList()));
-
-        return productResponse;
-    }
 
     /**
      * Returns a product by its ID.
@@ -227,14 +168,7 @@ public class ProductController {
             )
             @PathVariable Integer id
     ) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(
-                        () -> new ProductNotFoundException("Product not found id: " + id)
-                );
 
-        ProductResponse productResponse = buildProductResponse(product);
-        Response<ProductResponse> apiResponse = new Response<>(true, productResponse);
-
-        return ResponseEntity.ok(apiResponse);
+        return productService.getProductById(id);
     }
 }
