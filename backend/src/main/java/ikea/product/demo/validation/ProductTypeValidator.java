@@ -18,6 +18,9 @@ public class ProductTypeValidator implements ConstraintValidator<ValidProductTyp
 
     @Override
     public boolean isValid(Integer productTypeId, ConstraintValidatorContext context) {
+        if (productTypeId == null) {
+            return false;
+        }
         return productTypeRepository.existsById(productTypeId);
     }
 }

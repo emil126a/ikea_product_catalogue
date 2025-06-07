@@ -1,9 +1,8 @@
 package ikea.product.demo.controller.api;
 
+import ikea.product.demo.dto.error.ValidationErrorResponseDTO;
 import ikea.product.demo.dto.input.ProductDTO;
-import ikea.product.demo.dto.output.ApiResponseDTO;
-import ikea.product.demo.dto.output.PaginatedApiResponseDTO;
-import ikea.product.demo.dto.output.PaginationDTO;
+import ikea.product.demo.dto.output.*;
 import ikea.product.demo.entity.Colour;
 import ikea.product.demo.entity.Product;
 import ikea.product.demo.entity.ProductType;
@@ -30,7 +29,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing products.
@@ -72,7 +74,7 @@ public class ProductController {
                     schema = @Schema(implementation = PaginatedApiResponseDTO.class)
             )
     )
-    public ResponseEntity<PaginatedApiResponseDTO<List<Product>>> listProducts(
+    public ResponseEntity<PaginatedApiResponseDTO<List<ProductOutputDTO>>> listProducts(
             @Parameter(
                     description = "Pagination and sorting parameters",
                     example = "{\"page\":0,\"size\":10,\"sort\":\"createdAt,desc\"}",
@@ -93,41 +95,88 @@ public class ProductController {
                 products.isEmpty()
         );
 
-        PaginatedApiResponseDTO<List<Product>> paginatedApiResponseDTO = new PaginatedApiResponseDTO<>(true, products.getContent(), pagination);
+        List<ProductOutputDTO> productOutputDTOList = new ArrayList<>();
+
+        for (Product product : products.getContent()) {
+            productOutputDTOList.add(buildProductOutputDTO(product));
+        }
+
+        PaginatedApiResponseDTO<List<ProductOutputDTO>> paginatedApiResponseDTO = new PaginatedApiResponseDTO<>(true, productOutputDTOList, pagination);
 
         return ResponseEntity.ok(paginatedApiResponseDTO);
     }
 
-    /**
-     * Creates a new product with the given data.
-     *
-     * @param productDTO the product data from the request body
-     * @return the created Product entity
-     */
     @PostMapping("/products")
     @Operation(summary = "Create a new product", description = "Creates a new product with the provided details.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Product created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved products",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input data",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorResponseDTO.class),
+                            examples = @ExampleObject(
+                                    name = "ValidationError",
+                                    summary = "Validation failure example",
+                                    value = """
+                                            {
+                                                "success": false,
+                                                "error": {
+                                                    "message": "Validation failed",
+                                                    "details": {
+                                                        "colourIds": "One or more colour IDs are invalid or do not exist",
+                                                        "name": "Name is required",
+                                                        "productTypeId": "Invalid product type ID: must exist in the database"
+                                                    },
+                                                    "code": 400
+                                                }
+                                            }
+                                            """
+                            )))
     })
     @Transactional
-    public ResponseEntity<ApiResponseDTO<Product>> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponseDTO<ProductOutputDTO>> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductType productType = productTypeRepository.findOneById(productDTO.getProductTypeId());
-
         Product product = new Product();
         product.setName(productDTO.getName());
+        product.setCreatedAt(LocalDateTime.now());
         product.setProductType(productType);
 
         for (int id : productDTO.getColourIds()) {
             Colour colour = colourRepository.findOneById(id);
             product.addColour(colour);
         }
-
         productRepository.save(product);
 
-        ApiResponseDTO<Product> apiResponseDTO = new ApiResponseDTO<>(true, product);
+        ProductOutputDTO outputProductDTO = buildProductOutputDTO(product);
+        ApiResponseDTO<ProductOutputDTO> apiResponseDTO = new ApiResponseDTO<>(true, outputProductDTO);
         return ResponseEntity.ok(apiResponseDTO);
+    }
+
+    private ProductOutputDTO buildProductOutputDTO(Product product) {
+        ProductOutputDTO outputProductDTO = new ProductOutputDTO();
+        outputProductDTO.setId(product.getId());
+        outputProductDTO.setName(product.getName());
+        outputProductDTO.setCreatedAt(product.getCreatedAt().toString());
+        outputProductDTO.setProductType(
+                new ProductTypeDTO(
+                        product.getProductType().getId(),
+                        product.getProductType().getName()
+                )
+        );
+        outputProductDTO.setColours(product.getColours().stream()
+                .map(colour -> new ColourDTO(
+                        colour.getId(),
+                        colour.getName())
+                )
+                .collect(Collectors.toList()));
+
+        return outputProductDTO;
     }
 
     /**
@@ -148,7 +197,7 @@ public class ProductController {
                     description = "Product found and returned",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Product.class)
+                            schema = @Schema(implementation = ApiResponseDTO.class)
                     )
             ),
             @ApiResponse(
@@ -168,7 +217,7 @@ public class ProductController {
                     )
             )
     })
-    public ResponseEntity<ApiResponseDTO<Product>> getProductById(
+    public ResponseEntity<ApiResponseDTO<ProductOutputDTO>> getProductById(
             @Parameter(
                     name = "id",
                     description = "ID of the product to retrieve",
@@ -182,7 +231,9 @@ public class ProductController {
                 .orElseThrow(
                         () -> new ProductNotFoundException("Product not found id: " + id)
                 );
-        ApiResponseDTO<Product> apiResponse = new ApiResponseDTO<>(true, product);
+
+        ProductOutputDTO productOutputDTO = buildProductOutputDTO(product);
+        ApiResponseDTO<ProductOutputDTO> apiResponse = new ApiResponseDTO<>(true, productOutputDTO);
 
         return ResponseEntity.ok(apiResponse);
     }
