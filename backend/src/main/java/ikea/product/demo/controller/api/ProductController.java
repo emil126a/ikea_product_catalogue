@@ -3,10 +3,6 @@ package ikea.product.demo.controller.api;
 import ikea.product.demo.dto.response.ValidationErrorResponse;
 import ikea.product.demo.dto.request.ProductRequest;
 import ikea.product.demo.dto.response.*;
-import ikea.product.demo.entity.Colour;
-import ikea.product.demo.entity.Product;
-import ikea.product.demo.entity.ProductType;
-import ikea.product.demo.exception.ProductNotFoundException;
 import ikea.product.demo.repository.ColourRepository;
 import ikea.product.demo.repository.ProductRepository;
 import ikea.product.demo.repository.ProductTypeRepository;
@@ -26,15 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import jakarta.validation.Valid;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing products.
@@ -115,7 +106,9 @@ public class ProductController {
                             )))
     })
     @Transactional
-    public ResponseEntity<Response<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Response<ProductResponse>> createProduct(
+            @Valid @RequestBody ProductRequest productRequest
+    ) {
         return productService.createProduct(productRequest);
     }
 
@@ -168,7 +161,6 @@ public class ProductController {
             )
             @PathVariable Integer id
     ) {
-
         return productService.getProductById(id);
     }
 }
