@@ -12,7 +12,7 @@ import java.util.Map;
 @Value
 @Builder
 @Schema(description = "Error response containing validation errors")
-public class ValidationErrorResponseDTO {
+public class ValidationErrorResponse {
 
     Boolean success;
 

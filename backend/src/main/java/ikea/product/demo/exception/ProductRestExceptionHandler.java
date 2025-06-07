@@ -1,6 +1,6 @@
 package ikea.product.demo.exception;
 
-import ikea.product.demo.dto.error.ValidationErrorResponseDTO;
+import ikea.product.demo.dto.error.ValidationErrorResponse;
 import io.micrometer.common.lang.NonNull;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpHeaders;
@@ -45,8 +45,8 @@ public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler 
                         (existing, replacement) -> existing // Handle duplicate fields
                 ));
 
-        ValidationErrorResponseDTO response = ValidationErrorResponseDTO.builder()
-                .error(ValidationErrorResponseDTO.ErrorDetail.builder()
+        ValidationErrorResponse response = ValidationErrorResponse.builder()
+                .error(ValidationErrorResponse.ErrorDetail.builder()
                         .message("Validation failed")
                         .details(details)
                         .code(HttpStatus.BAD_REQUEST.value())

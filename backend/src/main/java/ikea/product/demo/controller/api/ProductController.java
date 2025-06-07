@@ -1,6 +1,6 @@
 package ikea.product.demo.controller.api;
 
-import ikea.product.demo.dto.error.ValidationErrorResponseDTO;
+import ikea.product.demo.dto.error.ValidationErrorResponse;
 import ikea.product.demo.dto.request.ProductRequest;
 import ikea.product.demo.dto.response.*;
 import ikea.product.demo.entity.Colour;
@@ -119,7 +119,7 @@ public class ProductController {
             ),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponseDTO.class),
+                            schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "ValidationError",
                                     summary = "Validation failure example",
@@ -162,7 +162,7 @@ public class ProductController {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setId(product.getId());
         productResponse.setName(product.getName());
-        productResponse.setCreatedAt(product.getCreatedAt().toString());
+        productResponse.setCreatedAt((product.getCreatedAt() != null) ? product.getCreatedAt().toString() : "");
         productResponse.setProductType(
                 new ProductTypeResponse(
                         product.getProductType().getId(),
