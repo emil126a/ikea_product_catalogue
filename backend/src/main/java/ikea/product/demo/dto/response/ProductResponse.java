@@ -1,4 +1,4 @@
-package ikea.product.demo.dto.output;
+package ikea.product.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductOutputDTO {
+public class ProductResponse {
     private Integer id;
     private String name;
-    private List<ColourDTO> colours;
-    private ProductTypeDTO productType;
+    private List<ColourResponse> colours;
+    private ProductTypeResponse productType;
     private String createdAt;
 }

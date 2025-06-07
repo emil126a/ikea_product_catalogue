@@ -1,4 +1,4 @@
-package ikea.product.demo.dto.input;
+package ikea.product.demo.dto.request;
 
 import ikea.product.demo.validation.ValidColourIds;
 import ikea.product.demo.validation.ValidProductType;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Input data for creating or updating a product")
-public class ProductDTO {
+public class ProductRequest {
     @NotNull(message = "Product type ID is required")
     @Schema(description = "The type if of the product", example = "1")
     @ValidProductType

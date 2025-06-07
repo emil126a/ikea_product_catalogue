@@ -1,4 +1,4 @@
-package ikea.product.demo.dto.output;
+package ikea.product.demo.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 @Data
 @AllArgsConstructor
-@Schema(description = "PaginationDTO information")
-public class PaginationDTO {
-    @Schema(description = "PaginationDTO information")
+@Schema(description = "PaginationResponse information")
+public class PaginationResponse {
+    @Schema(description = "PaginationResponse information")
     private Pageable pageable;
 
     @Schema(description = "Total number of elements across all pages", example = "2")
