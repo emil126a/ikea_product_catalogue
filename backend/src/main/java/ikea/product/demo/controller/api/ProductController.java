@@ -2,7 +2,8 @@ package ikea.product.demo.controller.api;
 
 import ikea.product.demo.dto.input.ProductDTO;
 import ikea.product.demo.dto.output.ApiResponseDTO;
-import ikea.product.demo.dto.output.PaginatedResponseDTO;
+import ikea.product.demo.dto.output.PaginatedApiResponseDTO;
+import ikea.product.demo.dto.output.PaginationDTO;
 import ikea.product.demo.dto.output.ProductListResponseDTO;
 import ikea.product.demo.entity.Product;
 import ikea.product.demo.exception.ProductNotFoundException;
@@ -25,6 +26,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 
+import java.util.List;
+
 /**
  * REST controller for managing products.
  * Provides endpoints for listing, retrieving, and creating products.
@@ -42,7 +45,7 @@ public class ProductController {
     /**
      * Retrieves a paginated list of products sorted by creation date.
      *
-     * @param pageable PaginatedResponseDTO and sorting parameters (default: 10 items, sorted by createdAt DESC)
+     * @param pageable PaginationDTO and sorting parameters (default: 10 items, sorted by createdAt DESC)
      * @return A paginated response containing product details
      */
     @GetMapping("/products")
@@ -55,10 +58,10 @@ public class ProductController {
             description = "Successfully retrieved products",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductListResponseDTO.class)
+                    schema = @Schema(implementation = PaginatedApiResponseDTO.class)
             )
     )
-    public ResponseEntity<ApiResponseDTO<ProductListResponseDTO<Product>>> listProducts(
+    public ResponseEntity<PaginatedApiResponseDTO<List<Product>>> listProducts(
             @Parameter(
                     description = "Pagination and sorting parameters",
                     example = "{\"page\":0,\"size\":10,\"sort\":\"createdAt,desc\"}",
@@ -69,7 +72,7 @@ public class ProductController {
     ) {
         Page<Product> products = productRepository.findAll(pageable);
 
-        PaginatedResponseDTO pagination = new PaginatedResponseDTO(
+        PaginationDTO pagination = new PaginationDTO(
                 products.getPageable(),
                 products.getTotalElements(),
                 products.getTotalPages(),
@@ -79,8 +82,7 @@ public class ProductController {
                 products.isEmpty()
         );
 
-        ProductListResponseDTO<Product> response = new ProductListResponseDTO<>(products.getContent(), pagination);
-        ApiResponseDTO<ProductListResponseDTO<Product>> apiResponse = new ApiResponseDTO<>(true, response);
+        PaginatedApiResponseDTO<List<Product>> apiResponse = new PaginatedApiResponseDTO<>(true, products.getContent(),pagination);
 
         return ResponseEntity.ok(apiResponse);
     }

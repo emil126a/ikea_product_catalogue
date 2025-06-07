@@ -18,5 +18,5 @@ public class ProductListResponseDTO<T> {
     private List<Product> products;
 
     @Schema(description = "Pagination information")
-    private PaginatedResponseDTO pagination;
+    private PaginationDTO pagination;
 }
