@@ -70,13 +70,10 @@ public class ProductService {
         Page<Product> products = this.findAllProducts(pageable);
 
         PaginationResponse pagination = new PaginationResponse(
-                products.getPageable(),
+                products.getNumber() + 1,
                 products.getTotalElements(),
                 products.getTotalPages(),
-                products.getNumberOfElements(),
-                products.isFirst(),
-                products.isLast(),
-                products.isEmpty()
+                products.getNumberOfElements()
         );
 
         List<ProductResponse> productResponseList = new ArrayList<>();

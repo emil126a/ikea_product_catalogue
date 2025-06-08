@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 @AllArgsConstructor
 @Schema(description = "PaginationResponse information")
 public class PaginationResponse {
-    @Schema(description = "PaginationResponse information")
-    private Pageable pageable;
+    @Schema(description = "Current page number (0-based)", example = "0")
+    private Integer currentPage;
 
     @Schema(description = "Total number of elements across all pages", example = "2")
     private Long totalElements;
@@ -19,14 +19,6 @@ public class PaginationResponse {
     private Integer totalPages;
 
     @Schema(description = "Number of elements in the current page", example = "2")
-    private Integer numberOfElements;
+    private Integer limit;
 
-    @Schema(description = "Whether this is the first page", example = "true")
-    private Boolean first;
-
-    @Schema(description = "Whether this is the last page", example = "true")
-    private Boolean last;
-
-    @Schema(description = "Whether the page is empty", example = "false")
-    private Boolean empty;
 }
