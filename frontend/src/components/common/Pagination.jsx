@@ -1,4 +1,3 @@
-// src/components/common/Pagination.jsx
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 export default function Pagination({

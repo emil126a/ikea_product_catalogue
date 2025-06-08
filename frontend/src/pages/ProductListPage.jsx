@@ -25,8 +25,8 @@ function ProductListPage() {
         setProducts(response.data.data);
         setPagination(prev => ({
           ...prev,
-          total: response.data.total,
-          totalPages: Math.ceil(response.data.total / pagination.limit)
+        total: response.data.pagination.totalElements,
+        totalPages: response.data.pagination.totalPages
         }));
       } catch (err) {
         setError('Failed to load products');
