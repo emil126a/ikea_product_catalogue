@@ -2,7 +2,7 @@ package ikea.product.demo.controller.api;
 
 import ikea.product.demo.dto.request.ProductRequest;
 import ikea.product.demo.dto.response.ProductResponse;
-import ikea.product.demo.dto.response.Response;
+import ikea.product.demo.dto.response.SuccessResponse;
 import ikea.product.demo.dto.response.ValidationErrorResponse;
 import ikea.product.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class ProductCreateController {
                     description = "Successfully created product",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Response.class)
+                            schema = @Schema(implementation = SuccessResponse.class)
                     )
             ),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
@@ -73,7 +73,7 @@ public class ProductCreateController {
                             )))
     })
     @Transactional
-    public ResponseEntity<Response<ProductResponse>> createProduct(
+    public ResponseEntity<SuccessResponse<ProductResponse>> createProduct(
             @Valid @RequestBody ProductRequest productRequest
     ) {
         return productService.createProduct(productRequest);

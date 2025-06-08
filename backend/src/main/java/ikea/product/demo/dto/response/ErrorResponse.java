@@ -3,7 +3,7 @@ package ikea.product.demo.dto.response;
 import lombok.Data;
 
 @Data
-public class ApiErrorResponse {
+public class ErrorResponse {
     private boolean success;
     private ErrorDetails error;
 
@@ -18,7 +18,7 @@ public class ApiErrorResponse {
         }
     }
 
-    public ApiErrorResponse(String message, int code) {
+    public ErrorResponse(String message, int code) {
         this.success = false;
         this.error = new ErrorDetails(message, code);
     }

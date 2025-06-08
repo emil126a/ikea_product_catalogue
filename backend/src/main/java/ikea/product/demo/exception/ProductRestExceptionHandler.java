@@ -1,6 +1,6 @@
 package ikea.product.demo.exception;
 
-import ikea.product.demo.dto.response.ApiErrorResponse;
+import ikea.product.demo.dto.response.ErrorResponse;
 import ikea.product.demo.dto.response.ValidationErrorResponse;
 import io.micrometer.common.lang.NonNull;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -25,8 +25,8 @@ public class ProductRestExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiErrorResponse> handleProductNotFound(ProductNotFoundException exception) {
-        ApiErrorResponse error = new ApiErrorResponse(
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
                 exception.getMessage(),
                 HttpStatus.NOT_FOUND.value()
         );

@@ -6,13 +6,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Data
 @Builder
 @Schema(description = "Input data for creating or updating a product")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductRequest {
     @NotNull(message = "Product type ID is required")
     @Schema(description = "The type if of the product", example = "1")

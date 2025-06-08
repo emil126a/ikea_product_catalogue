@@ -1,10 +1,10 @@
 package ikea.product.demo.service;
 
 import ikea.product.demo.dto.request.ProductRequest;
-import ikea.product.demo.dto.response.PaginatedResponse;
+import ikea.product.demo.dto.response.PaginatedListResponse;
 import ikea.product.demo.dto.response.PaginationResponse;
 import ikea.product.demo.dto.response.ProductResponse;
-import ikea.product.demo.dto.response.Response;
+import ikea.product.demo.dto.response.SuccessResponse;
 import ikea.product.demo.entity.Colour;
 import ikea.product.demo.entity.Product;
 import ikea.product.demo.entity.ProductType;
@@ -37,7 +37,7 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public ResponseEntity<Response<ProductResponse>> createProduct(ProductRequest request) {
+    public ResponseEntity<SuccessResponse<ProductResponse>> createProduct(ProductRequest request) {
         ProductType productType = productTypeRepository.findOneById(request.getProductTypeId());
         Product product = productMapper.toEntity(request);
         product.setProductType(productType);
@@ -52,23 +52,23 @@ public class ProductService {
 
         ProductResponse productResponse = productMapper.toResponse(product);
 
-        Response<ProductResponse> response = new Response<>(true, productResponse);
+        SuccessResponse<ProductResponse> successResponse = new SuccessResponse<>(true, productResponse);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(successResponse);
     }
 
 
-    public ResponseEntity<Response<ProductResponse>> getProductById(Integer id) {
+    public ResponseEntity<SuccessResponse<ProductResponse>> getProductById(Integer id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         ProductResponse productResponse = productMapper.toResponse(product);
-        Response<ProductResponse> apiResponse = new Response<>(true, productResponse);
+        SuccessResponse<ProductResponse> successResponse = new SuccessResponse<>(true, productResponse);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(successResponse);
     }
 
-    public ResponseEntity<PaginatedResponse<List<ProductResponse>>> listProducts(Pageable pageable) {
+    public ResponseEntity<PaginatedListResponse<List<ProductResponse>>> listProducts(Pageable pageable) {
         Page<Product> products = this.findAllProducts(pageable);
 
         PaginationResponse pagination = new PaginationResponse(
@@ -87,8 +87,8 @@ public class ProductService {
             productResponseList.add(productMapper.toResponse(product));
         }
 
-        PaginatedResponse<List<ProductResponse>> paginatedResponse = new PaginatedResponse<>(true, productResponseList, pagination);
+        PaginatedListResponse<List<ProductResponse>> paginatedListResponse = new PaginatedListResponse<>(true, productResponseList, pagination);
 
-        return ResponseEntity.ok(paginatedResponse);
+        return ResponseEntity.ok(paginatedListResponse);
     }
 }

@@ -1,7 +1,7 @@
 package ikea.product.demo.controller.api;
 
+import ikea.product.demo.dto.response.SuccessResponse;
 import ikea.product.demo.dto.response.ProductResponse;
-import ikea.product.demo.dto.response.Response;
 import ikea.product.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +33,7 @@ public class ProductDetailsController {
      * Returns a product by its ID.
      *
      * @param id the ID of the product
-     * @return a ResponseEntity with Response containing the product if found,
+     * @return a ResponseEntity with SuccessResponse containing the product if found,
      * or 404 error if not found
      */
     @GetMapping("/{id}")
@@ -47,7 +47,7 @@ public class ProductDetailsController {
                     description = "Product found and returned",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Response.class)
+                            schema = @Schema(implementation = SuccessResponse.class)
                     )
             ),
             @ApiResponse(
@@ -67,7 +67,7 @@ public class ProductDetailsController {
                     )
             )
     })
-    public ResponseEntity<Response<ProductResponse>> getProductById(
+    public ResponseEntity<SuccessResponse<ProductResponse>> getProductById(
             @Parameter(
                     name = "id",
                     description = "ID of the product to retrieve",

@@ -1,6 +1,6 @@
 package ikea.product.demo.controller.api;
 
-import ikea.product.demo.dto.response.PaginatedResponse;
+import ikea.product.demo.dto.response.PaginatedListResponse;
 import ikea.product.demo.dto.response.ProductResponse;
 import ikea.product.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,10 +47,10 @@ public class ProductListController {
             description = "Successfully retrieved products",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PaginatedResponse.class)
+                    schema = @Schema(implementation = PaginatedListResponse.class)
             )
     )
-    public ResponseEntity<PaginatedResponse<List<ProductResponse>>> listProducts(
+    public ResponseEntity<PaginatedListResponse<List<ProductResponse>>> listProducts(
             @Parameter(
                     description = "Pagination and sorting parameters",
                     example = "{\"page\":0,\"size\":10,\"sort\":\"createdAt,desc\"}",

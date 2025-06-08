@@ -6,10 +6,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Response<T> {
+public class PaginatedListResponse<T> {
     @Schema(description = "Indicates if the request was successful")
     private boolean success;
 
-    @Schema(description = "The requested resource")
+    @Schema(description = "List of products and pagination metadata")
     private T data;
+
+    @Schema(description = "Pagination details")
+    private PaginationResponse pagination;
 }
