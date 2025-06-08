@@ -1,4 +1,16 @@
 function ProductList({ products, onProductClick }) {
+      const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        const options = {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -8,6 +20,7 @@ function ProductList({ products, onProductClick }) {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Colors</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
@@ -37,6 +50,7 @@ function ProductList({ products, onProductClick }) {
                   ))}
                 </div>
               </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(product.createdAt)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <button
                   onClick={(e) => {
