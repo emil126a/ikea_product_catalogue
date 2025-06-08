@@ -51,12 +51,10 @@ public class ProductService {
         productRepository.save(product);
 
         ProductResponse productResponse = productMapper.toResponse(product);
-
         SuccessResponse<ProductResponse> successResponse = new SuccessResponse<>(true, productResponse);
 
         return ResponseEntity.ok(successResponse);
     }
-
 
     public ResponseEntity<SuccessResponse<ProductResponse>> getProductById(Integer id) {
         Product product = productRepository.findById(id)

@@ -1,6 +1,5 @@
 package ikea.product.demo.validation;
 
-
 import ikea.product.demo.repository.ColourRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
