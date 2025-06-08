@@ -1,0 +1,178 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createProduct } from '../services/api';
+
+function CreateProductPage() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    productTypeId: '',
+    colourIds: []
+  });
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await createProduct(formData);
+      navigate('/products');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to create product');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-800">Create New Product</h2>
+          <button
+            onClick={() => navigate('/products')}
+            className="text-gray-600 hover:text-gray-800 flex items-center"
+          >
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Products
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+            <p>{error}</p>
+          </div>
+        )}
+
+        <div className="card p-6">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-6">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Product Name *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                rows={4}
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="productTypeId" className="block text-sm font-medium text-gray-700 mb-1">
+                Product Type *
+              </label>
+              <select
+                id="productTypeId"
+                name="productTypeId"
+                value={formData.productTypeId}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Select a product type</option>
+                {/* You would typically fetch these from your API */}
+                <option value="1">Type A</option>
+                <option value="2">Type B</option>
+                <option value="3">Type C</option>
+              </select>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Available Colors *
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {/* Example color options - should come from API */}
+                {[
+                  { id: 1, name: 'Red', hexCode: '#EF4444' },
+                  { id: 2, name: 'Blue', hexCode: '#3B82F6' },
+                  { id: 3, name: 'Green', hexCode: '#10B981' },
+                ].map(color => (
+                  <div key={color.id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`color-${color.id}`}
+                      name="colourIds"
+                      value={color.id}
+                      checked={formData.colourIds.includes(color.id)}
+                      onChange={(e) => {
+                        const { value, checked } = e.target;
+                        setFormData(prev => ({
+                          ...prev,
+                          colourIds: checked
+                            ? [...prev.colourIds, Number(value)]
+                            : prev.colourIds.filter(id => id !== Number(value))
+                        }));
+                      }}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor={`color-${color.id}`} className="ml-2 flex items-center">
+                      <span
+                        className="w-4 h-4 rounded-full inline-block mr-2"
+                        style={{ backgroundColor: color.hexCode }}
+                      />
+                      <span className="text-sm text-gray-700">{color.name}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-primary flex items-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating...
+                  </>
+                ) : 'Create Product'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default CreateProductPage;
