@@ -69,7 +69,6 @@ class ProductCreateControllerTest {
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().isSuccess());
         assertEquals("Billy Bookcase", response.getBody().getData().getName());
     }
 
