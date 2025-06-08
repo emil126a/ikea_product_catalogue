@@ -1,10 +1,7 @@
 package ikea.product.demo.service;
 
 import ikea.product.demo.dto.request.ProductRequest;
-import ikea.product.demo.dto.response.PaginatedListResponse;
-import ikea.product.demo.dto.response.PaginationResponse;
-import ikea.product.demo.dto.response.ProductResponse;
-import ikea.product.demo.dto.response.SuccessResponse;
+import ikea.product.demo.dto.response.*;
 import ikea.product.demo.entity.Colour;
 import ikea.product.demo.entity.Product;
 import ikea.product.demo.entity.ProductType;
@@ -19,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ikea.product.demo.mapper.ColourMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,6 +31,7 @@ public class ProductService {
     private final ProductTypeRepository productTypeRepository;
     private final ColourRepository colourRepository;
     private final ProductMapper productMapper;
+    private final ColourMapper colourMapper;
 
     public Page<Product> findAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
@@ -88,5 +88,15 @@ public class ProductService {
         PaginatedListResponse<List<ProductResponse>> paginatedListResponse = new PaginatedListResponse<>(true, productResponseList, pagination);
 
         return ResponseEntity.ok(paginatedListResponse);
+    }
+
+    public ResponseEntity<SuccessResponse<List<ColourResponse>>> getAllColours() {
+        List<Colour> colours = colourRepository.findAll();
+        List<ColourResponse> colourResponses = colours.stream()
+                .map(colourMapper::toResponse)
+                .collect(Collectors.toList());
+
+        SuccessResponse<List<ColourResponse>> successResponse = new SuccessResponse<>(true, colourResponses);
+        return ResponseEntity.ok(successResponse);
     }
 }
