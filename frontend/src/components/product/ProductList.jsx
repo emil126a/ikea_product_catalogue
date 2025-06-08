@@ -14,7 +14,7 @@ function ProductList({ products, onProductClick }) {
         <tbody className="bg-white divide-y divide-gray-200">
           {products.map((product) => (
             <tr
-              key={product.id}
+              key={`color-${product.id}`}
               className="hover:bg-gray-50 cursor-pointer"
               onClick={() => onProductClick(product.id)}
             >

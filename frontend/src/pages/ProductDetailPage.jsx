@@ -13,7 +13,7 @@ function ProductDetailPage() {
     const loadProduct = async () => {
       try {
         const response = await fetchProductById(id);
-        setProduct(response.data);
+        setProduct(response.data.data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load product details');
