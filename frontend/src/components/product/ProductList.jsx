@@ -57,7 +57,7 @@ function ProductList({ products, onProductClick }) {
                     e.stopPropagation();
                     onProductClick(product.id);
                   }}
-                  className="text-blue-600 hover:text-blue-900"
+                  className="text-blue-600 hover:text-blue-900 cursor-pointer"
                 >
                   View Details
                 </button>
