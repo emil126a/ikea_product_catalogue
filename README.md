@@ -2,10 +2,6 @@
 
 I've developed a full-stack product management system with mobile-responsive design 📱. The application features:
 
-- **Frontend**: Modern React 19 + Vite 6
-- **Backend**: Robust Spring Boot 3.2 (Java 21) implementation
-- **Architecture**: Domain-Driven Design (DDD) principles
-- **Cross-Platform**: Fully responsive layout for all device sizes
 ---
 
 ## 🧰 Tech Stack
@@ -14,6 +10,8 @@ I've developed a full-stack product management system with mobile-responsive des
 - **Backend**: Java 21, Spring Boot, JPA, Lombok
 - **API Documentation**: Swagger UI
 - **Containerization**: Docker, Docker Compose
+- **Architecture**: Domain-Driven Design (DDD) principles
+- **Cross-Platform**: Fully responsive layout for all device sizes 
 
 ---
 
