@@ -27,20 +27,14 @@ cd product-catalogue
 To build and start the application:
 
 ```bash
-docker compose up --build
+docker compose build --no-cache
 ```
 
-Or, if already built:
+Then:
 
 ```bash
 docker compose up
 ```
-## After Running Docker Compose
-
-- ✅ Frontend application running on port 80
-- ✅ Backend API available on port 8080
-- ✅ Database service initialized
-- ✅ All dependencies installed and services connected
 
 **That's it! You're done! 🎉** The application is now ready to use.
 
@@ -49,6 +43,12 @@ docker compose up
 - **Swagger API Docs**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 
+## After Running Docker Compose
+
+- ✅ Frontend application running on port 80
+- ✅ Backend API available on port 8080
+- ✅ Database service initialized
+- ✅ All dependencies installed and services connected
 ---
 
 ## 📦 API Endpoints (Examples)
