@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import ProductList from '../components/product/ProductList';
 import Pagination from '../components/common/Pagination';
 import { fetchProducts } from '../services/api';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    page: 0, // 0-based to match API
-    limit: 10, // Fixed to 10
+    page: 0,
+    limit: 10,
     total: 0,
     totalPages: 1,
   });
@@ -61,13 +62,9 @@ function ProductListPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+if (loading) {
+  return <LoadingSpinner />;
+}
 
   if (error) {
     return (
