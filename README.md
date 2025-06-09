@@ -1,12 +1,11 @@
 # 🛍️ IKEA Product Management System
 
 I've developed a full-stack product management system with mobile-responsive design 📱. The application features:
-
 ---
 
 ## 🧰 Tech Stack
 
-- **Frontend**: React, Vite, Tailwind CSS
+- **Frontend**: React 19, Vite 6, Tailwind CSS
 - **Backend**: Java 21, Spring Boot, JPA, Lombok
 - **API Documentation**: Swagger UI
 - **Containerization**: Docker, Docker Compose
@@ -15,7 +14,7 @@ I've developed a full-stack product management system with mobile-responsive des
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Set up - Getting Started 
 
 ### 1. Clone the Repository
 
