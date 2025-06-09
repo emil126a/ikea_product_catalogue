@@ -22,6 +22,11 @@ public class Colour {
     @Column(name = "name")
     private String name;
 
+    @Setter
+    @Getter
+    @Column(name = "hexcode")
+    private String hexcode;
+
     @ManyToMany(mappedBy = "colours")
     private List<Product> products;
 

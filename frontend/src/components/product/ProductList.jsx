@@ -44,7 +44,7 @@ function ProductList({ products, onProductClick }) {
                     <span
                       key={color.id}
                       className="w-4 h-4 rounded-full inline-block"
-                      style={{ backgroundColor: color.hexCode || '#ccc' }}
+                      style={{ backgroundColor: color.hexcode || '#ccc' }}
                       title={color.name}
                     />
                   ))}

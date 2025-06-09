@@ -3,10 +3,14 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 export default function Pagination({
   currentPage,
   totalPages,
-  onPageChange
+  onPageChange,
+  itemsPerPage = 10, // Default to 10 items per page
+  totalItems, // New prop for total number of items
 }) {
   const maxVisiblePages = 5;
+  const displayPage = currentPage + 1; // Convert 0-based to 1-based
 
+  // Calculate start and end pages for pagination
   let startPage, endPage;
   if (totalPages <= maxVisiblePages) {
     startPage = 1;
@@ -15,35 +19,39 @@ export default function Pagination({
     const maxPagesBeforeCurrent = Math.floor(maxVisiblePages / 2);
     const maxPagesAfterCurrent = Math.ceil(maxVisiblePages / 2) - 1;
 
-    if (currentPage <= maxPagesBeforeCurrent) {
+    if (displayPage <= maxPagesBeforeCurrent) {
       startPage = 1;
       endPage = maxVisiblePages;
-    } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+    } else if (displayPage + maxPagesAfterCurrent >= totalPages) {
       startPage = totalPages - maxVisiblePages + 1;
       endPage = totalPages;
     } else {
-      startPage = currentPage - maxPagesBeforeCurrent;
-      endPage = currentPage + maxPagesAfterCurrent;
+      startPage = displayPage - maxPagesBeforeCurrent;
+      endPage = displayPage + maxPagesAfterCurrent;
     }
   }
 
-  const pages = Array.from({ length: (endPage - startPage + 1) }, (_, i) => startPage + i);
+  const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
+  // Calculate the range of items shown
+  const startItem = currentPage * itemsPerPage + 1;
+  const endItem = Math.min((currentPage + 1) * itemsPerPage, totalItems);
 
   return (
     <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{(currentPage - 1) * 10 + 1}</span> to{' '}
-            <span className="font-medium">{Math.min(currentPage * 10, totalPages * 10)}</span> of{' '}
-            <span className="font-medium">{totalPages * 10}</span> results
+            Showing <span className="font-medium">{startItem}</span> to{' '}
+            <span className="font-medium">{endItem}</span> of{' '}
+            <span className="font-medium">{totalItems}</span> results
           </p>
         </div>
         <div>
           <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm">
             <button
               onClick={() => onPageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              disabled={currentPage === 0}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
               <span className="sr-only">Previous</span>
@@ -53,7 +61,7 @@ export default function Pagination({
             {startPage > 1 && (
               <>
                 <button
-                  onClick={() => onPageChange(1)}
+                  onClick={() => onPageChange(0)}
                   className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 >
                   1
@@ -69,9 +77,9 @@ export default function Pagination({
             {pages.map((page) => (
               <button
                 key={page}
-                onClick={() => onPageChange(page)}
+                onClick={() => onPageChange(page - 1)}
                 className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                  currentPage === page
+                  currentPage === page - 1
                     ? 'bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
                     : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
                 }`}
@@ -88,7 +96,7 @@ export default function Pagination({
                   </span>
                 )}
                 <button
-                  onClick={() => onPageChange(totalPages)}
+                  onClick={() => onPageChange(totalPages - 1)}
                   className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 >
                   {totalPages}
@@ -98,7 +106,7 @@ export default function Pagination({
 
             <button
               onClick={() => onPageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages - 1} // Disable when on last page
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
               <span className="sr-only">Next</span>

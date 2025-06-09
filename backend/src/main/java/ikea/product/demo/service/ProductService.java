@@ -70,7 +70,7 @@ public class ProductService {
         Page<Product> products = this.findAllProducts(pageable);
 
         PaginationResponse pagination = new PaginationResponse(
-                products.getNumber() + 1,
+                products.getNumber(),
                 products.getTotalElements(),
                 products.getTotalPages(),
                 products.getNumberOfElements()

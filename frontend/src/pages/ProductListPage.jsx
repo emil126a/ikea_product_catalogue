@@ -9,12 +9,12 @@ function ProductListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    page: 1,
+    page: 0,
     limit: 10,
     total: 0,
     totalPages: 1
   });
-  const [apiSuccess, setApiSuccess] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,16 +30,16 @@ function ProductListPage() {
             total: response.data.pagination.totalElements,
             totalPages: response.data.pagination.totalPages
           }));
-          setApiSuccess(true);
+
           setError(null);
         } else {
           setError('Failed to load products: API returned unsuccessful');
-          setApiSuccess(false);
+
         }
       } catch (err) {
         setError('Failed to load products: ' + (err.message || 'Network error'));
-        setApiSuccess(false);
-        console.error(err);
+
+
       } finally {
         setLoading(false);
       }
@@ -59,11 +59,11 @@ function ProductListPage() {
     </div>
   );
 
-  if (error || !apiSuccess) return (
+  if (error) return (
     <div className="container mx-auto px-4 py-8">
       <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
         <p className="font-bold">Error</p>
-        <p>{error || 'Failed to load products'}</p>
+        <p>{error}</p>
         <button
           onClick={() => window.location.reload()}
           className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
@@ -98,6 +98,8 @@ function ProductListPage() {
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
           onPageChange={handlePageChange}
+          totalItems={pagination.totalElements}
+
         />
       </div>
     </div>
