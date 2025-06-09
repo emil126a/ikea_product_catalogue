@@ -1,4 +1,4 @@
-# 🛍️ IKEA Product Management System
+~~# 🛍️ IKEA Product Management System
 
 I've developed a full-stack product management system with mobile-responsive design 📱. The application features:
 
@@ -7,11 +7,17 @@ I've developed a full-stack product management system with mobile-responsive des
 ## 🧰 Tech Stack
 
 - **Frontend**: React 19, Vite 6, Tailwind CSS
-- **Backend**: Java 21, Spring Boot, JPA, Lombok
+  - **Cross-Platform**: Fully responsive layout
+
+- **Backend**:
+    - Java 21 with Spring Boot 3.5
+    - JPA/Hibernate with MySQL
+    - MapStruct 1.6.3 for DTO mapping
+    - Lombok 1.18.30 for boilerplate reduction
+- **Testing**: JUnit 5, Mockito 5.14.2
 - **API Documentation**: Swagger UI
 - **Containerization**: Docker, Docker Compose
 - **Architecture**: Domain-Driven Design (DDD) principles
-- **Cross-Platform**: Fully responsive layout for all device sizes 
 
 ---
 
@@ -112,4 +118,4 @@ frontend/
 
 - Ensure ports **80** and **8080** are free before starting.
 - The database is managed via **Docker Compose** — no manual setup required.
-- Environment variables are configured via `.env` files and `application.properties`.
+- Environment variables are configured via `.env` files and `application.properties`.~~
