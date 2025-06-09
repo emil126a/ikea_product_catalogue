@@ -1,6 +1,7 @@
 # 🛍️ IKEA Product Management System
 
 I've developed a full-stack product management system with mobile-responsive design 📱. The application features:
+
 ---
 
 ## 🧰 Tech Stack
