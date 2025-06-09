@@ -1,7 +1,7 @@
-~~# 🛍️ IKEA Product Management System
+# 🛍️ IKEA Product Management System
 
 I've developed a full-stack product management system with mobile-responsive design 📱. The application features:
-
+![Product Management Demo](preview.gif)
 ---
 
 ## 🧰 Tech Stack
@@ -118,4 +118,4 @@ frontend/
 
 - Ensure ports **80** and **8080** are free before starting.
 - The database is managed via **Docker Compose** — no manual setup required.
-- Environment variables are configured via `.env` files and `application.properties`.~~
+- Environment variables are configured via `.env` files and `application.properties`.
