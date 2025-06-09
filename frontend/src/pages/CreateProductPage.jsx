@@ -7,7 +7,6 @@ function CreateProductPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     productTypeId: '',
     colourIds: [],
   });
@@ -54,40 +53,18 @@ function CreateProductPage() {
         ? [...prev.colourIds, Number(value)]
         : prev.colourIds.filter((id) => id !== Number(value)),
     }));
-    if (checked) {
-      setErrors((prev) => ({ ...prev, colourIds: '' }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required';
-    }
-    if (!formData.productTypeId) {
-      newErrors.productTypeId = 'Product type is required';
-    }
-    if (formData.colourIds.length === 0) {
-      newErrors.colourIds = 'At least one color is required';
-    }
-    return newErrors;
+    setErrors((prev) => ({ ...prev, colourIds: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
     setIsSubmitting(true);
     setErrors({});
 
     try {
       const payload = {
         ...formData,
-        productTypeId: Number(formData.productTypeId),
+        productTypeId: formData.productTypeId ? Number(formData.productTypeId) : null,
       };
       await createProduct(payload);
       navigate('/products');
@@ -148,20 +125,6 @@ function CreateProductPage() {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  rows={4}
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div className="mb-6">
                 <label htmlFor="productTypeId" className="block text-sm font-medium text-gray-700 mb-1">
                   Product Type *
                 </label>
@@ -202,7 +165,9 @@ function CreateProductPage() {
                       />
                       <label htmlFor={`color-${color.id}`} className="ml-2 flex items-center">
                         <span
-                          className="w-4 h-4 rounded-full inline-block mr-2"
+                          className="w-4 h-4 rounded-full
+
+ inline-block mr-2"
                           style={{ backgroundColor: color.hexcode }}
                         />
                         <span className="text-sm text-gray-700">{color.name}</span>

@@ -62,9 +62,9 @@ function ProductListPage() {
     }
   };
 
-    if (loading) {
+   if (loading) {
       return <LoadingSpinner />;
-    }
+   }
 
   if (error) {
     return (

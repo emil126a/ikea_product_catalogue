@@ -85,13 +85,6 @@ function ProductDetailPage() {
                 </div>
               </div>
             </div>
-
-            <div className="border-t border-gray-200 pt-4">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-600">
-                {product.description || 'No description available'}
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -19,12 +19,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRequest {
-    @NotNull(message = "Product type ID is required")
+    @NotNull(message = "Product type is required")
     @Schema(description = "The type if of the product", example = "1")
     @ValidProductType
     private Integer productTypeId;
 
-    @NotEmpty(message = "Colour IDs are required")
+    @NotEmpty(message = "Colour is required")
     @Schema(description = "The colour ID of the product", example = "[1,2,3]")
     @ValidColourIds
     private List<Integer> colourIds;
