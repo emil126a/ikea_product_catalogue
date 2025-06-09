@@ -1,6 +1,6 @@
 # 🛍️ IKEA Product Management System
 
-A full-stack application for managing products, built with a **React + Vite** frontend and a **Java 21 + Spring Boot** backend, adhering to **Domain-Driven Design (DDD)** principles.
+I've developed both the full-stack application and a mobile-responsive layout 📱, full-stack application for managing products, built with a **React + Vite** frontend and a **Java 21 + Spring Boot** backend, adhering to **Domain-Driven Design (DDD)** principles.
 
 ---
 
