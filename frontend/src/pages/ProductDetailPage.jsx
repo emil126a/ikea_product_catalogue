@@ -77,7 +77,7 @@ function ProductDetailPage() {
                     <div key={color.id} className="flex items-center">
                       <span
                         className="w-4 h-4 rounded-full inline-block mr-1"
-                        style={{ backgroundColor: color.hexCode || '#ccc' }}
+                        style={{ backgroundColor: color.hexcode || '#ccc' }}
                       />
                       <span className="text-sm text-gray-900">{color.name}</span>
                     </div>
