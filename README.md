@@ -35,11 +35,6 @@ Or, if already built:
 ```bash
 docker compose up
 ```
-
-### 3. 🌐 Access the Application
-- **Enter**: [http://localhost/products](http://localhost/products)
-- **Swagger API Docs**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-
 ## After Running Docker Compose
 
 - ✅ Frontend application running on port 80
@@ -48,6 +43,12 @@ docker compose up
 - ✅ All dependencies installed and services connected
 
 **That's it! You're done! 🎉** The application is now ready to use.
+
+### 3. 🌐 Access the Application
+- **Enter**: [http://localhost/products](http://localhost/products)
+- **Swagger API Docs**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+
 ---
 
 ## 📦 API Endpoints (Examples)
