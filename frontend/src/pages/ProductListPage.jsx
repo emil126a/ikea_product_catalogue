@@ -9,70 +9,84 @@ function ProductListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    page: 0,
-    limit: 10,
+    page: 0, // 0-based to match API
+    limit: 10, // Fixed to 10
     total: 0,
-    totalPages: 1
+    totalPages: 1,
   });
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true; // Prevent state updates after unmount
     const loadProducts = async () => {
       try {
         setLoading(true);
         const response = await fetchProducts(pagination.page, pagination.limit);
+        console.log('API Response:', response.data); // Debug response
 
-        if (response.data.success) {
+        if (isMounted && response.data.success) {
           setProducts(response.data.data);
-          setPagination(prev => ({
+          setPagination((prev) => ({
             ...prev,
+            page: response.data.pagination.currentPage, // Update page
             total: response.data.pagination.totalElements,
-            totalPages: response.data.pagination.totalPages
+            totalPages: response.data.pagination.totalPages,
+            // Do not update limit unless explicitly required
           }));
-
           setError(null);
-        } else {
+        } else if (isMounted) {
           setError('Failed to load products: API returned unsuccessful');
-
         }
       } catch (err) {
-        setError('Failed to load products: ' + (err.message || 'Network error'));
-
-
+        if (isMounted) {
+          setError('Failed to load products: ' + (err.message || 'Network error'));
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
     loadProducts();
-  }, [pagination.page, pagination.limit]);
+    return () => {
+      isMounted = false; // Cleanup to prevent state updates after unmount
+    };
+  }, [pagination.page]); // Remove pagination.limit from dependencies
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= pagination.totalPages) {
-      setPagination(prev => ({ ...prev, page: newPage }));
+    console.log(`handlePageChange: newPage=${newPage}, currentLimit=${pagination.limit}`);
+    if (newPage >= 0 && newPage < pagination.totalPages) {
+      setPagination((prev) => ({ ...prev, page: newPage }));
     }
   };
 
-  if (loading && pagination.page === 1) return (
-    <div className="flex justify-center items-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-        <p className="font-bold">Error</p>
-        <p>{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Retry
-        </button>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+          <p className="font-bold">Error</p>
+          <p>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('Pagination Props:', pagination); // Debug props
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -97,9 +111,9 @@ function ProductListPage() {
         <Pagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
+          itemsPerPage={pagination.limit}
+          totalItems={pagination.total}
           onPageChange={handlePageChange}
-          totalItems={pagination.totalElements}
-
         />
       </div>
     </div>
