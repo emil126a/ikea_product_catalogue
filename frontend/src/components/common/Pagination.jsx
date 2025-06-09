@@ -42,88 +42,86 @@ export default function Pagination({
   console.log(`Pagination: currentPage=${safeCurrentPage}, itemsPerPage=${itemsPerPage}, totalItems=${safeTotalItems}, startItem=${startItem}, endItem=${endItem}`);
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{startItem}</span> to{' '}
-            <span className="font-medium">{endItem}</span> of{' '}
-            <span className="font-medium">{safeTotalItems}</span> results
-          </p>
-        </div>
-        <div>
-          <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-            <button
-              onClick={() => onPageChange(safeCurrentPage - 1)}
-              disabled={safeCurrentPage === 0}
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 disabled:opacity-50 group"
-            >
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon
-                className="h-5 w-5 transition-transform duration-200 group-hover:scale-110 group-hover:text-blue-700 group-disabled:group-hover:scale-100 group-disabled:group-hover:text-gray-400 cursor-pointers"
-                aria-hidden="true"
-              />
-            </button>
+    <div className="flex flex-col items-center justify-between border-t border-gray-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-2 text-center sm:mb-0 sm:text-left">
+        <p className="text-sm text-gray-700">
+          Showing <span className="font-medium">{startItem}</span> to{' '}
+          <span className="font-medium">{endItem}</span> of{' '}
+          <span className="font-medium">{safeTotalItems}</span> results
+        </p>
+      </div>
+      <div>
+        <nav className="isolate inline-flex flex-wrap -space-x-px rounded-md shadow-sm">
+          <button
+            onClick={() => onPageChange(safeCurrentPage - 1)}
+            disabled={safeCurrentPage === 0}
+            className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 disabled:opacity-50 group"
+          >
+            <span className="sr-only">Previous</span>
+            <ChevronLeftIcon
+              className="h-5 w-5 transition-transform duration-200 group-hover:scale-110 group-hover:text-blue-700 group-disabled:group-hover:scale-100 group-disabled:group-hover:text-gray-400 cursor-pointer"
+              aria-hidden="true"
+            />
+          </button>
 
-            {startPage > 1 && (
-              <>
-                <button
-                  onClick={() => onPageChange(0)}
-                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0"
-                >
-                  1
-                </button>
-                {startPage > 2 && (
-                  <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
-                    ...
-                  </span>
-                )}
-              </>
-            )}
-
-            {pages.map((page) => (
+          {startPage > 1 && (
+            <>
               <button
-                key={page}
-                onClick={() => onPageChange(page - 1)}
-                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                  safeCurrentPage === page - 1
-                    ? 'bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer'
-                    : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 cursor-pointer'
-                }`}
+                onClick={() => onPageChange(0)}
+                className="relative inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0"
               >
-                {page}
+                1
               </button>
-            ))}
+              {startPage > 2 && (
+                <span className="relative inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                  ...
+                </span>
+              )}
+            </>
+          )}
 
-            {endPage < safeTotalPages && (
-              <>
-                {endPage < safeTotalPages - 1 && (
-                  <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
-                    ...
-                  </span>
-                )}
-                <button
-                  onClick={() => onPageChange(safeTotalPages - 1)}
-                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0"
-                >
-                  {safeTotalPages}
-                </button>
-              </>
-            )}
-
+          {pages.map((page) => (
             <button
-              onClick={() => onPageChange(safeCurrentPage + 1)}
-              disabled={safeCurrentPage === safeTotalPages - 1}
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 disabled:opacity-50 group"
+              key={page}
+              onClick={() => onPageChange(page - 1)}
+              className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold ${
+                safeCurrentPage === page - 1
+                  ? 'bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer'
+                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 cursor-pointer'
+              }`}
             >
-              <span className="sr-only">Next</span>
-              <ChevronRightIcon
-                className="h-5 w-5 transition-transform duration-200 group-hover:scale-110 group-hover:text-blue-700 group-disabled:group-hover:scale-100 group-disabled:group-hover:text-gray-400 cursor-pointer"
-                aria-hidden="true"
-              />
+              {page}
             </button>
-          </nav>
-        </div>
+          ))}
+
+          {endPage < safeTotalPages && (
+            <>
+              {endPage < safeTotalPages - 1 && (
+                <span className="relative inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                  ...
+                </span>
+              )}
+              <button
+                onClick={() => onPageChange(safeTotalPages - 1)}
+                className="relative inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0"
+              >
+                {safeTotalPages}
+              </button>
+            </>
+          )}
+
+          <button
+            onClick={() => onPageChange(safeCurrentPage + 1)}
+            disabled={safeCurrentPage === safeTotalPages - 1}
+            className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 hover:text-blue-700 hover:ring-blue-500 focus:z-20 focus:outline-offset-0 disabled:opacity-50 group"
+          >
+            <span className="sr-only">Next</span>
+            <ChevronRightIcon
+              className="h-5 w-5 transition-transform duration-200 group-hover:scale-110 group-hover:text-blue-700 group-disabled:group-hover:scale-100 group-disabled:group-hover:text-gray-400 cursor-pointer"
+              aria-hidden="true"
+            />
+          </button>
+        </nav>
       </div>
     </div>
   );
