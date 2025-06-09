@@ -8,4 +8,4 @@ export const fetchProductById = (id) => api.get(`/products/${id}`);
 export const fetchProductTypes = () => api.get('/product-types');
 export const fetchColors = () => api.get('/colors');
 export const createProduct = (productData) => api.post('/products', productData);
-export const fetchProducts = (page = 1, limit = 10) => api.get(`/products?page=${page}&size=${limit}&sort=id,asc`);
+export const fetchProducts = (page = 1, limit = 10) => api.get(`/products?page=${page}&size=${limit}&sort=createdAt,desc`);
