@@ -28,7 +28,7 @@ I've developed a full-stack product management system with mobile-responsive des
 
 ```bash
 git clone https://github.com/emil126a/ikea_product_catalogue.git
-cd product-catalogue
+cd ikea_product_catalogue
 ```
 
 ### 2. Run with Docker Compose
